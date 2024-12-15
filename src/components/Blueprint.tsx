@@ -45,7 +45,7 @@ export function Blueprint() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [selectedNode, setSelectedNode] = useState<Node | null>(null);
-  const { addLayer, updateLayer, layers } = useBlueprintStore();
+  const { addLayer, layers } = useBlueprintStore();
 
   const onConnect = useCallback(
     (params: Connection) => setEdges((eds) => addEdge(params, eds)),
@@ -53,7 +53,7 @@ export function Blueprint() {
   );
 
   const onNodeDoubleClick = useCallback(
-    (event: React.MouseEvent, node: Node) => {
+    (_: React.MouseEvent, node: Node) => {
       setSelectedNode(node);
       if (!layers[node.id]) {
         addLayer(node.id, [], []);
@@ -63,7 +63,7 @@ export function Blueprint() {
   );
 
   const onNodeClick = useCallback(
-    (event: React.MouseEvent, node: Node) => {
+    (_: React.MouseEvent, node: Node) => {
       const newLabel = prompt('Enter new label:', node.data.label);
       if (newLabel) {
         setNodes((nds) =>

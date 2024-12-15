@@ -1,14 +1,12 @@
 import { useCallback } from 'react';
 import ReactFlow, {
   Node,
-  Edge,
   Controls,
   Background,
   Connection,
   addEdge,
   useNodesState,
   useEdgesState,
-  MarkerType,
 } from 'reactflow';
 import { useBlueprintStore } from '../store/blueprintStore';
 
@@ -34,7 +32,7 @@ export function LayerView({ nodeId, onClose }: LayerViewProps) {
   );
 
   const onNodeClick = useCallback(
-    (event: React.MouseEvent, node: Node) => {
+    (_: React.MouseEvent, node: Node) => {
       const newLabel = prompt('Enter new label:', node.data.label);
       if (newLabel) {
         const newNodes = nodes.map((n) => {
