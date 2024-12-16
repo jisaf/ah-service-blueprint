@@ -38,6 +38,28 @@ export function LayerView({ nodeId, onClose }: LayerViewProps) {
     [edges, nodes, nodeId, setEdges, updateLayer],
   );
 
+  const onPaneDoubleClick = useCallback(
+    (event: React.MouseEvent) => {
+      const bounds = (event.target as HTMLElement).getBoundingClientRect();
+      const position = {
+        x: event.clientX - bounds.left,
+        y: event.clientY - bounds.top,
+      };
+
+      const newNode: Node = {
+        id: `node-${nodeId}-${nodes.length + 1}`,
+        type: 'custom',
+        position,
+        data: { label: 'New Node' },
+      };
+
+      const newNodes = [...nodes, newNode];
+      setNodes(newNodes);
+      updateLayer(nodeId, newNodes, edges);
+    },
+    [nodes, nodeId, edges, setNodes, updateLayer],
+  );
+
   return (
     <div className="fixed inset-0 bg-background/80 backdrop-blur-sm">
       <div className="fixed inset-4 bg-background border rounded-lg shadow-lg flex flex-col">
@@ -57,6 +79,7 @@ export function LayerView({ nodeId, onClose }: LayerViewProps) {
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
             onConnect={onConnect}
+            onPaneDoubleClick={onPaneDoubleClick}
             nodeTypes={nodeTypes}
             fitView
             snapToGrid

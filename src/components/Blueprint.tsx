@@ -65,6 +65,28 @@ export function Blueprint() {
     [layers, addLayer],
   );
 
+  const onPaneDoubleClick = useCallback(
+    (event: React.MouseEvent) => {
+      // Get the position from the event, relative to the viewport
+      const bounds = (event.target as HTMLElement).getBoundingClientRect();
+      const position = {
+        x: event.clientX - bounds.left,
+        y: event.clientY - bounds.top,
+      };
+
+      // Create a new node
+      const newNode: Node = {
+        id: `node-${nodes.length + 1}`,
+        type: 'custom',
+        position,
+        data: { label: 'New Node' },
+      };
+
+      setNodes((nds) => [...nds, newNode]);
+    },
+    [nodes, setNodes],
+  );
+
   return (
     <div className="w-full h-screen">
       <ReactFlow
@@ -74,6 +96,7 @@ export function Blueprint() {
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
         onNodeDoubleClick={onNodeDoubleClick}
+        onPaneDoubleClick={onPaneDoubleClick}
         nodeTypes={nodeTypes}
         fitView
         snapToGrid

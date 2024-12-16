@@ -34,11 +34,34 @@ function CustomNodeComponent({ data, isConnectable }: NodeProps<CustomNodeData>)
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <Handle
-        type="target"
-        position={Position.Left}
-        isConnectable={isConnectable}
-      />
+      {isHovered && (
+        <>
+          <Handle
+            type="target"
+            position={Position.Left}
+            isConnectable={isConnectable}
+            className="opacity-0 group-hover:opacity-100 transition-opacity"
+          />
+          <Handle
+            type="target"
+            position={Position.Top}
+            isConnectable={isConnectable}
+            className="opacity-0 group-hover:opacity-100 transition-opacity"
+          />
+          <Handle
+            type="source"
+            position={Position.Right}
+            isConnectable={isConnectable}
+            className="opacity-0 group-hover:opacity-100 transition-opacity"
+          />
+          <Handle
+            type="source"
+            position={Position.Bottom}
+            isConnectable={isConnectable}
+            className="opacity-0 group-hover:opacity-100 transition-opacity"
+          />
+        </>
+      )}
       <div
         className="px-4 py-2 rounded-md shadow-sm border border-gray-200"
         style={{ backgroundColor }}
@@ -74,11 +97,6 @@ function CustomNodeComponent({ data, isConnectable }: NodeProps<CustomNodeData>)
           </div>
         )}
       </div>
-      <Handle
-        type="source"
-        position={Position.Right}
-        isConnectable={isConnectable}
-      />
     </div>
   );
 }
