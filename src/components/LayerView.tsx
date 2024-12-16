@@ -9,6 +9,11 @@ import ReactFlow, {
   useEdgesState,
 } from 'reactflow';
 import { useBlueprintStore } from '../store/blueprintStore';
+import { CustomNode } from './CustomNode';
+
+const nodeTypes = {
+  custom: CustomNode,
+};
 
 interface LayerViewProps {
   nodeId: string;
@@ -19,7 +24,9 @@ export function LayerView({ nodeId, onClose }: LayerViewProps) {
   const { layers, updateLayer } = useBlueprintStore();
   const layer = layers[nodeId];
 
-  const [nodes, setNodes, onNodesChange] = useNodesState(layer?.nodes || []);
+  const [nodes, setNodes, onNodesChange] = useNodesState(
+    layer?.nodes?.map(node => ({ ...node, type: 'custom' })) || []
+  );
   const [edges, setEdges, onEdgesChange] = useEdgesState(layer?.edges || []);
 
   const onConnect = useCallback(
@@ -29,26 +36,6 @@ export function LayerView({ nodeId, onClose }: LayerViewProps) {
       updateLayer(nodeId, nodes, newEdges);
     },
     [edges, nodes, nodeId, setEdges, updateLayer],
-  );
-
-  const onNodeClick = useCallback(
-    (_: React.MouseEvent, node: Node) => {
-      const newLabel = prompt('Enter new label:', node.data.label);
-      if (newLabel) {
-        const newNodes = nodes.map((n) => {
-          if (n.id === node.id) {
-            return {
-              ...n,
-              data: { ...n.data, label: newLabel },
-            };
-          }
-          return n;
-        });
-        setNodes(newNodes);
-        updateLayer(nodeId, newNodes, edges);
-      }
-    },
-    [nodes, edges, nodeId, setNodes, updateLayer],
   );
 
   return (
@@ -70,7 +57,7 @@ export function LayerView({ nodeId, onClose }: LayerViewProps) {
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
             onConnect={onConnect}
-            onNodeClick={onNodeClick}
+            nodeTypes={nodeTypes}
             fitView
             snapToGrid
             snapGrid={[15, 15]}

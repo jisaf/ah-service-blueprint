@@ -13,21 +13,24 @@ import ReactFlow, {
 import 'reactflow/dist/style.css';
 import { useBlueprintStore } from '../store/blueprintStore';
 import { LayerView } from './LayerView';
+import { CustomNode } from './CustomNode';
+
+const nodeTypes = {
+  custom: CustomNode,
+};
 
 const initialNodes: Node[] = [
   {
     id: '1',
-    type: 'default',
+    type: 'custom',
     data: { label: 'Visits website' },
     position: { x: 100, y: 100 },
-    className: 'bg-blue-100 rounded-md',
   },
   {
     id: '2',
-    type: 'default',
+    type: 'custom',
     data: { label: 'Makes purchase' },
     position: { x: 400, y: 100 },
-    className: 'bg-blue-100 rounded-md',
   },
 ];
 
@@ -62,26 +65,6 @@ export function Blueprint() {
     [layers, addLayer],
   );
 
-  const onNodeClick = useCallback(
-    (_: React.MouseEvent, node: Node) => {
-      const newLabel = prompt('Enter new label:', node.data.label);
-      if (newLabel) {
-        setNodes((nds) =>
-          nds.map((n) => {
-            if (n.id === node.id) {
-              return {
-                ...n,
-                data: { ...n.data, label: newLabel },
-              };
-            }
-            return n;
-          }),
-        );
-      }
-    },
-    [setNodes],
-  );
-
   return (
     <div className="w-full h-screen">
       <ReactFlow
@@ -91,7 +74,7 @@ export function Blueprint() {
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
         onNodeDoubleClick={onNodeDoubleClick}
-        onNodeClick={onNodeClick}
+        nodeTypes={nodeTypes}
         fitView
         snapToGrid
         snapGrid={[15, 15]}
