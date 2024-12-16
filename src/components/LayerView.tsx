@@ -38,26 +38,35 @@ export function LayerView({ nodeId, onClose }: LayerViewProps) {
     [edges, nodes, nodeId, setEdges, updateLayer],
   );
 
-  const onPaneDoubleClick = useCallback(
+  const [lastClickTime, setLastClickTime] = useState(0);
+
+  const onPaneClick = useCallback(
     (event: React.MouseEvent) => {
-      const bounds = (event.target as HTMLElement).getBoundingClientRect();
-      const position = {
-        x: event.clientX - bounds.left,
-        y: event.clientY - bounds.top,
-      };
+      const currentTime = new Date().getTime();
+      const timeDiff = currentTime - lastClickTime;
+      
+      if (timeDiff < 300) { // Double click threshold
+        const bounds = (event.target as HTMLElement).getBoundingClientRect();
+        const position = {
+          x: event.clientX - bounds.left,
+          y: event.clientY - bounds.top,
+        };
 
-      const newNode: Node = {
-        id: `node-${nodeId}-${nodes.length + 1}`,
-        type: 'custom',
-        position,
-        data: { label: 'New Node' },
-      };
+        const newNode: Node = {
+          id: `node-${nodeId}-${nodes.length + 1}`,
+          type: 'custom',
+          position,
+          data: { label: 'New Node' },
+        };
 
-      const newNodes = [...nodes, newNode];
-      setNodes(newNodes);
-      updateLayer(nodeId, newNodes, edges);
+        const newNodes = [...nodes, newNode];
+        setNodes(newNodes);
+        updateLayer(nodeId, newNodes, edges);
+      }
+      
+      setLastClickTime(currentTime);
     },
-    [nodes, nodeId, edges, setNodes, updateLayer],
+    [lastClickTime, nodes, nodeId, edges, setNodes, updateLayer],
   );
 
   return (
@@ -79,7 +88,7 @@ export function LayerView({ nodeId, onClose }: LayerViewProps) {
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
             onConnect={onConnect}
-            onDoubleClick={onPaneDoubleClick}
+            onPaneClick={onPaneClick}
             nodeTypes={nodeTypes}
             fitView
             snapToGrid

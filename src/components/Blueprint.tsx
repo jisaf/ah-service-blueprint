@@ -67,26 +67,33 @@ export function Blueprint() {
     [layers, addLayer],
   );
 
-  const onPaneDoubleClick = useCallback(
+  const [lastClickTime, setLastClickTime] = useState(0);
+
+  const onPaneClick = useCallback(
     (event: React.MouseEvent) => {
-      // Get the position from the event, relative to the viewport
-      const bounds = (event.target as HTMLElement).getBoundingClientRect();
-      const position = {
-        x: event.clientX - bounds.left,
-        y: event.clientY - bounds.top,
-      };
+      const currentTime = new Date().getTime();
+      const timeDiff = currentTime - lastClickTime;
+      
+      if (timeDiff < 300) { // Double click threshold
+        const bounds = (event.target as HTMLElement).getBoundingClientRect();
+        const position = {
+          x: event.clientX - bounds.left,
+          y: event.clientY - bounds.top,
+        };
 
-      // Create a new node
-      const newNode: Node = {
-        id: `node-${nodes.length + 1}`,
-        type: 'custom',
-        position,
-        data: { label: 'New Node' },
-      };
+        const newNode: Node = {
+          id: `node-${nodes.length + 1}`,
+          type: 'custom',
+          position,
+          data: { label: 'New Node' },
+        };
 
-      setNodes((nds) => [...nds, newNode]);
+        setNodes((nds) => [...nds, newNode]);
+      }
+      
+      setLastClickTime(currentTime);
     },
-    [nodes, setNodes],
+    [lastClickTime, nodes, setNodes],
   );
 
   return (
@@ -98,7 +105,7 @@ export function Blueprint() {
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
         onNodeDoubleClick={onNodeDoubleClick}
-        onDoubleClick={onPaneDoubleClick}
+        onPaneClick={onPaneClick}
         nodeTypes={nodeTypes}
         fitView
         snapToGrid
