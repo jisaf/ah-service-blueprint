@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import ReactFlow, {
   Node,
   Controls,
@@ -7,6 +7,7 @@ import ReactFlow, {
   addEdge,
   useNodesState,
   useEdgesState,
+  useReactFlow,
 } from 'reactflow';
 import { useBlueprintStore } from '../store/blueprintStore';
 import { CustomNode } from './CustomNode';
@@ -40,17 +41,19 @@ export function LayerView({ nodeId, onClose }: LayerViewProps) {
 
   const [lastClickTime, setLastClickTime] = useState(0);
 
+  const { project } = useReactFlow();
+
   const onPaneClick = useCallback(
     (event: React.MouseEvent) => {
       const currentTime = new Date().getTime();
       const timeDiff = currentTime - lastClickTime;
       
       if (timeDiff < 300) { // Double click threshold
-        const bounds = (event.target as HTMLElement).getBoundingClientRect();
-        const position = {
-          x: event.clientX - bounds.left,
-          y: event.clientY - bounds.top,
-        };
+        const { top, left } = (event.target as HTMLElement).getBoundingClientRect();
+        const position = project({
+          x: event.clientX - left,
+          y: event.clientY - top,
+        });
 
         const newNode: Node = {
           id: `node-${nodeId}-${nodes.length + 1}`,
@@ -66,7 +69,7 @@ export function LayerView({ nodeId, onClose }: LayerViewProps) {
       
       setLastClickTime(currentTime);
     },
-    [lastClickTime, nodes, nodeId, edges, setNodes, updateLayer],
+    [lastClickTime, nodes, nodeId, edges, setNodes, updateLayer, project],
   );
 
   return (

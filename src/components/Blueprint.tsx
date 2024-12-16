@@ -9,6 +9,7 @@ import ReactFlow, {
   useNodesState,
   useEdgesState,
   MarkerType,
+  useReactFlow,
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import { useBlueprintStore } from '../store/blueprintStore';
@@ -69,17 +70,20 @@ export function Blueprint() {
 
   const [lastClickTime, setLastClickTime] = useState(0);
 
+  const { project } = useReactFlow();
+  
   const onPaneClick = useCallback(
     (event: React.MouseEvent) => {
       const currentTime = new Date().getTime();
       const timeDiff = currentTime - lastClickTime;
       
       if (timeDiff < 300) { // Double click threshold
-        const bounds = (event.target as HTMLElement).getBoundingClientRect();
-        const position = {
-          x: event.clientX - bounds.left,
-          y: event.clientY - bounds.top,
-        };
+        // Get the mouse position relative to the viewport
+        const { top, left } = (event.target as HTMLElement).getBoundingClientRect();
+        const position = project({
+          x: event.clientX - left,
+          y: event.clientY - top,
+        });
 
         const newNode: Node = {
           id: `node-${nodes.length + 1}`,
@@ -93,7 +97,7 @@ export function Blueprint() {
       
       setLastClickTime(currentTime);
     },
-    [lastClickTime, nodes, setNodes],
+    [lastClickTime, nodes, setNodes, project],
   );
 
   return (
