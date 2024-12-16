@@ -39,6 +39,8 @@ const initialEdges: Edge[] = [
     id: 'e1-2',
     source: '1',
     target: '2',
+    sourceHandle: 'right',
+    targetHandle: 'left',
     markerEnd: { type: MarkerType.ArrowClosed },
     type: 'smoothstep',
   },
@@ -96,7 +98,7 @@ export function Blueprint() {
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
         onNodeDoubleClick={onNodeDoubleClick}
-        onPaneDoubleClick={onPaneDoubleClick}
+        onDoubleClick={onPaneDoubleClick}
         nodeTypes={nodeTypes}
         fitView
         snapToGrid

@@ -79,7 +79,7 @@ export function LayerView({ nodeId, onClose }: LayerViewProps) {
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
             onConnect={onConnect}
-            onPaneDoubleClick={onPaneDoubleClick}
+            onDoubleClick={onPaneDoubleClick}
             nodeTypes={nodeTypes}
             fitView
             snapToGrid

@@ -37,28 +37,32 @@ function CustomNodeComponent({ data, isConnectable }: NodeProps<CustomNodeData>)
       {isHovered && (
         <>
           <Handle
+            id="left"
             type="target"
             position={Position.Left}
             isConnectable={isConnectable}
-            className="opacity-0 group-hover:opacity-100 transition-opacity"
+            className="opacity-0 group-hover:opacity-100 transition-opacity !bg-gray-400"
           />
           <Handle
+            id="top"
             type="target"
             position={Position.Top}
             isConnectable={isConnectable}
-            className="opacity-0 group-hover:opacity-100 transition-opacity"
+            className="opacity-0 group-hover:opacity-100 transition-opacity !bg-gray-400"
           />
           <Handle
+            id="right"
             type="source"
             position={Position.Right}
             isConnectable={isConnectable}
-            className="opacity-0 group-hover:opacity-100 transition-opacity"
+            className="opacity-0 group-hover:opacity-100 transition-opacity !bg-gray-400"
           />
           <Handle
+            id="bottom"
             type="source"
             position={Position.Bottom}
             isConnectable={isConnectable}
-            className="opacity-0 group-hover:opacity-100 transition-opacity"
+            className="opacity-0 group-hover:opacity-100 transition-opacity !bg-gray-400"
           />
         </>
       )}
